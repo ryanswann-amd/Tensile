@@ -88,8 +88,8 @@ def convert_one(args):
             json.dump(outData, outFile, sort_keys=True, indent=2, separators=(",", ": "))
 
 if __name__ == "__main__":
+    convert_one(sys.argv[1:])
+    #for i in Utils.tqdm(itertools.chain([1,2,3], [4,5,6])): time.sleep(1)
 
-    for i in Utils.tqdm(itertools.chain([1,2,3], [4,5,6])): time.sleep(1)
-
-    merge_libraries(sys.argv[1:])
+    #merge_libraries(sys.argv[1:])
 

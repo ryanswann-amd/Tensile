@@ -2974,8 +2974,8 @@ class Solution(collections.abc.Mapping):
     if state["StreamK"] != 0:
       if state["MIWaveGroup"][0] * state["MIWaveGroup"][1] != 4:
         reject(state, "Stream-K requries MIWaveGroup0*MIWaveGroup1=4")
-      if state["EnableMatrixInstruction"] and globalParameters["AsmCaps"][isa]["HasWMMA"]:
-        reject(state, "Stream-K untested with WMMA")
+      #if state["EnableMatrixInstruction"] and globalParameters["AsmCaps"][isa]["HasWMMA"]:
+        #reject(state, "Stream-K untested with WMMA")
       if state["GlobalSplitU"] > 1:
         reject(state, "Cannot enable both Stream-K and GSU")
       if state["PersistentKernel"]:
@@ -3660,9 +3660,14 @@ class Solution(collections.abc.Mapping):
     while True: # exit criteria at end
       validDepthU = True
       # peek LoopIters
+      #lsu = state["LocalSplitU"]
+      #iu = state["InnerUnroll"]
+      #print(f"Ryan Debug | depthULds:{depthULds} state_LocalSplitU:{lsu} state_InnerUnroll:{iu}")
       loopIters = (depthULds // state["LocalSplitU"]) // state["InnerUnroll"]
       if "MatrixInstK" in state:
         loopIters //= state["MatrixInstK"]
+        #mik = state["MatrixInstK"]
+        #print(f"Ryan Debug : MatrixInstK == {mik}")
       if loopIters < 1:
         reject(state, "LoopIters need to greater than 0")
         return

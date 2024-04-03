@@ -55,7 +55,7 @@ BenchmarkProblems:
           - [8, 8, 4]
         - WorkGroupMapping: [1, 4]
         - TransposeLDS: [0, 1]
-        - LdsBlockSizePerPad: [-1, 0, 64]
+          #- LdsBlockSizePerPad: [-1, 0, 64]
         - DepthU: [4, 8]
         - StoreVectorWidth: [-1, 1, 2, 4]
       BenchmarkFinalParameters:
@@ -67,5 +67,5 @@ BenchmarkProblems:
 
 # Specify appropriate parameters for your target device.
 LibraryLogic:
-  ScheduleName: "navi21"
-  ArchitectureName: "gfx1030"
+  ScheduleName: "navi31"
+  ArchitectureName: "gfx1100"

@@ -1305,6 +1305,7 @@ def TensileCreateLibrary():
     LibraryIO.write(masterFile, Utils.state(fullMasterLibrary), args.LibraryFormat)
 
   theMasterLibrary = fullMasterLibrary
+  print(f"Ryan Debug | Current contents of masterLibraries : {masterLibraries}")
   if globalParameters["PackageLibrary"] or globalParameters["SeparateArchitectures"]:
     theMasterLibrary = list(masterLibraries.values())[0]
 
