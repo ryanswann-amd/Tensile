@@ -12951,20 +12951,31 @@ class KernelWriterAssembly(KernelWriter):
     if self.version == (11,0,0) or self.version == (11,0,3): # TODO: Temporary workaround
       flagReg = tmpVgpr
       flagOffsetReg = tmpVgpr + 1
+      #Move flag and offset to registers
       kStr += inst("v_mov_b32", vgpr(flagReg), 1, "flag data")
       kStr += inst("v_mov_b32", vgpr(flagOffsetReg), sgpr(tmpSgpr), "flag offset into vgpr")
+      #Set execution mask differently depending on wavefront size 
       if self.kernel["WavefrontSize"] == 64:
         kStr += inst("s_mov_b64", "exec", "0x0000000000000001", "set exec mask for only the first thread")
       else:
-        kStr += inst("s_mov_b32", "exec_lo", "0x00000001", "set exec mask for only the first thread")
-      kStr += inst("global_store_dword", vgpr(flagOffsetReg), vgpr(flagReg), sgpr("AddressFlags", 2),"glc", "set flag")
+        kStr += inst("s_mov_b32", "exec_lo", "0x1", "set exec mask for only the first thread")
 
+      #Store flag to main memory
+      kStr += inst("global_store_dword", vgpr(flagOffsetReg), vgpr(flagReg), sgpr("AddressFlags", 2),"glc dlc", "set flag")
+      #kStr += inst("global_store_dword", vgpr(flagOffsetReg), vgpr(flagReg) ,"glc","dlc", "set flag")
+
+      #Reset Execution mask
       if self.kernel["WavefrontSize"] == 64:
         kStr += inst("s_mov_b64", "exec", "0xFFFFFFFFFFFFFFFF", "set exec mask for only the first thread")
       else:
         kStr += inst("s_mov_b32", "exec_lo", "0xFFFFFFFF", "set exec mask for only the first thread")
-      #kStr += inst("s_mov_b64", "exec", "0xFFFFFFFF", "reset exec mask for all threads")
+
+      #Wait for completion
       kStr += inst("s_waitcnt", "lgkmcnt(0)", "vmcnt(0)", "wait for flag") # TODO just for testing
+
+      #Wait on vector stores to complete
+      #Correct syntax : s_waitcnt_vscnt null, 0
+      kStr += inst("s_waitcnt_vscnt", "null", "0", "Wait for store to complete")
     else:
       kStr += inst("s_mov_b32", sgpr(tmpSgpr+2), 1, "flag data")
       kStr += inst("s_store_dword", sgpr(tmpSgpr+2), sgpr("AddressFlags", 2), sgpr(tmpSgpr), "glc", "set flag")
@@ -13582,15 +13593,16 @@ class KernelWriterAssembly(KernelWriter):
       
 
 
-      if self.version == (11,0,5) or self.version == (9,4,2): # TODO: Temporary workaround
+      if self.version == (11,0,0) or self.version == (9,4,2): # TODO: Temporary workaround
         flagOffsetReg = tmpVgpr + 1
         kStr += inst("v_mov_b32 ", vgpr(flagOffsetReg), sgpr(tmpSgpr), "flag offset into vgpr")
-        kStr += inst("global_load_dword ", vgpr(flagOffsetReg), vgpr(flagOffsetReg), sgpr("AddressFlags", 2), "glc", "get flag")
+        kStr += inst("global_load_dword ", vgpr(flagOffsetReg), vgpr(flagOffsetReg), sgpr("AddressFlags", 2), "glc dlc", "get flag")
         kStr += inst("s_waitcnt", "lgkmcnt(0)", "wait for flag load")
+        kStr += inst("s_waitcnt_vmcnt", "null", "0", "Wait for store to complete")
         #Flag needs to be 32-bit for wg size 32
         kStr += inst("v_readlane_b32", sgpr(tmpSgpr+2), vgpr(flagOffsetReg), "0x00000001", "flag to sgpr")
       else:
-        kStr += inst("s_load_dword", sgpr(tmpSgpr+2), sgpr("AddressFlags", 2), sgpr(tmpSgpr), "glc", "get flag")
+        kStr += inst("s_load_dword", sgpr(tmpSgpr+2), sgpr("AddressFlags", 2), sgpr(tmpSgpr), "glc dlc", "get flag")
         kStr += inst("s_waitcnt", "lgkmcnt(0)", "wait for flag load")
 
 
