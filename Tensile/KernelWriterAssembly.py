@@ -12971,11 +12971,11 @@ class KernelWriterAssembly(KernelWriter):
         kStr += inst("s_mov_b32", "exec_lo", "0xFFFFFFFF", "set exec mask for only the first thread")
 
       #Wait for completion
-      kStr += inst("s_waitcnt", "lgkmcnt(0)", "vmcnt(0)", "wait for flag") # TODO just for testing
+      #kStr += inst("s_waitcnt", "lgkmcnt(0)", "vmcnt(0)", "wait for flag") # TODO just for testing
 
       #Wait on vector stores to complete
       #Correct syntax : s_waitcnt_vscnt null, 0
-      kStr += inst("s_waitcnt_vscnt", "null", "0", "Wait for store to complete")
+      #kStr += inst("s_waitcnt_vscnt", "null", "0", "Wait for store to complete")
     else:
       kStr += inst("s_mov_b32", sgpr(tmpSgpr+2), 1, "flag data")
       kStr += inst("s_store_dword", sgpr(tmpSgpr+2), sgpr("AddressFlags", 2), sgpr(tmpSgpr), "glc", "set flag")
@@ -13597,8 +13597,8 @@ class KernelWriterAssembly(KernelWriter):
         flagOffsetReg = tmpVgpr + 1
         kStr += inst("v_mov_b32 ", vgpr(flagOffsetReg), sgpr(tmpSgpr), "flag offset into vgpr")
         kStr += inst("global_load_dword ", vgpr(flagOffsetReg), vgpr(flagOffsetReg), sgpr("AddressFlags", 2), "glc dlc", "get flag")
-        kStr += inst("s_waitcnt", "lgkmcnt(0)", "wait for flag load")
         kStr += inst("s_waitcnt_vmcnt", "null", "0", "Wait for store to complete")
+        #kStr += inst("s_waitcnt", "lgkmcnt(0)", "wait for flag load")
         #Flag needs to be 32-bit for wg size 32
         kStr += inst("v_readlane_b32", sgpr(tmpSgpr+2), vgpr(flagOffsetReg), "0x00000001", "flag to sgpr")
       else:
