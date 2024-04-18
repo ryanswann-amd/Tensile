@@ -306,7 +306,7 @@ architectureMap = {
   'gfx942':'aquavanjaram942', 'gfx942:xnack+':'aquavanjaram942', 'gfx942:xnack-':'aquavanjaram942',
   'gfx1010':'navi10', 'gfx1011':'navi12', 'gfx1012':'navi14',
   'gfx1030':'navi21', 'gfx1031':'navi22', 'gfx1032':'navi23', 'gfx1034':'navi24', 'gfx1035':'rembrandt',
-  'gfx1100':'navi31', 'gfx1101':'navi32', 'gfx1102':'navi33'
+  'gfx1100':'navi31', 'gfx1101':'navi32', 'gfx1102':'navi33', 'gfx1103' : 'phoenix'
 }
 
 def getArchitectureName(gfxName):
@@ -2057,6 +2057,7 @@ def GetAsmCaps(isaVersion):
       elif derivedAsmCaps != CACHED_ASM_CAPS[isaVersion]:
         exitFlag = True
       if exitFlag:
+        print(derivedAsmCaps)
         printExit("Cached asm caps differ from derived asm caps for {}".format(isaVersion))
     return derivedAsmCaps
   else:
@@ -2309,7 +2310,7 @@ def assignGlobalParameters( config ):
       globalParameters["CurrentISA"] = (9,0,6)
       printWarning("Failed to detect ISA so forcing (gfx906) on windows")
   if globalParameters["CurrentISA"] == (9,4,1) or globalParameters["CurrentISA"] == (9,4,2) or globalParameters["CurrentISA"] == (11,0,0) or \
-     globalParameters["CurrentISA"] == (11,0,1) or globalParameters["CurrentISA"] == (11,0,2) or or globalParameters["CurrentISA"] == (11,0,3):
+     globalParameters["CurrentISA"] == (11,0,1) or globalParameters["CurrentISA"] == (11,0,2) or globalParameters["CurrentISA"] == (11,0,3):
     printWarning("HardwareMonitor currently disabled for gfx941/942 or gfx1100/gfx1101/gfx1102")
     globalParameters["HardwareMonitor"] = False
 
