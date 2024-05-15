@@ -317,11 +317,13 @@ namespace Tensile
         size_t cuCount = 0;
         size_t skGrid  = 0;
         auto   tiles   = problem.getNumTiles(sizeMapping);
+        int    fullTiles = 0;
         if(sizeMapping.streamK != 0 || sizeMapping.persistentKernel != 0)
         {
             AMDGPU const* pAMDGPU = dynamic_cast<AMDGPU const*>(&hardware);
             assert(pAMDGPU != nullptr && pAMDGPU->computeUnitCount != 0);
             cuCount = pAMDGPU->computeUnitCount;
+            fullTiles = pAMDGPU->skFullTiles;
             if(sizeMapping.streamK != 0)
             {
                 skGrid             = getSKGrid(hardware, tiles);
@@ -683,7 +685,7 @@ namespace Tensile
                 }
                 else if(sizeMapping.streamK >= 2) // Two-tile SK
                 {
-                    bool bigEnough = tiles > skGrid;
+                    // bool bigEnough = tiles > skGrid;
                     // skTiles is number of Stream-K tiles to complete
                     // Two-tile algorithm causes each WG to run an even number of Stream-K iterations,
                     // followed by an even number of data-parllel tiles.
@@ -692,9 +694,10 @@ namespace Tensile
                     uint32_t skTiles = skGrid;
                     if(tiles % skGrid != 0)
                     {
+                        skTiles = std::min(skGrid * fullTiles + tiles % skGrid, tiles);
                         // Number of data-parallel tiles on each workgroup would be:
                         // dpTilesPerWG = bigEnough ? (tiles - skTiles) / skGrid : 0;
-                        skTiles = bigEnough ? skGrid + tiles % skGrid : tiles;
+                        // skTiles = bigEnough ? skGrid + tiles % skGrid : tiles;
                     }
 
                     uint32_t skItersPerWG = skTiles * itersPerTile / skGrid;

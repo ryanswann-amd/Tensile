@@ -208,6 +208,7 @@ namespace Tensile
         int         skMaxCUs         = 0;
         int         skGridMultiplier = 1;
         int         skFixedGrid      = 0;
+        int         skFullTiles      = 0;
         std::string deviceName;
 
         virtual bool   runsKernelTargeting(Processor p) const;
@@ -247,6 +248,13 @@ namespace Tensile
         const int getSKFixedGrid() const
         {
             static const char* envStr = std::getenv("TENSILE_STREAMK_FIXED_GRID");
+            static const int   value  = (envStr == NULL ? 0 : std::atoi(envStr));
+            return value;
+        }
+
+        const int getSKFullTiles() const
+        {
+            static const char* envStr = std::getenv("TENSILE_STREAMK_FULL_TILES");
             static const int   value  = (envStr == NULL ? 0 : std::atoi(envStr));
             return value;
         }
