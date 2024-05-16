@@ -317,13 +317,13 @@ namespace Tensile
         size_t cuCount = 0;
         size_t skGrid  = 0;
         auto   tiles   = problem.getNumTiles(sizeMapping);
-        int    fullTiles = 0;
+        int    fullTiles = sizeMapping.streamKFullTiles;
         if(sizeMapping.streamK != 0 || sizeMapping.persistentKernel != 0)
         {
             AMDGPU const* pAMDGPU = dynamic_cast<AMDGPU const*>(&hardware);
             assert(pAMDGPU != nullptr && pAMDGPU->computeUnitCount != 0);
             cuCount = pAMDGPU->computeUnitCount;
-            fullTiles = pAMDGPU->skFullTiles;
+            // fullTiles = pAMDGPU->skFullTiles;
             if(sizeMapping.streamK != 0)
             {
                 skGrid             = getSKGrid(hardware, tiles);

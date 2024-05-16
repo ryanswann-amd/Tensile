@@ -92,6 +92,7 @@ namespace Tensile
                 iot::mapOptional(io, "magicDivAlg", s.magicDivAlg);
                 iot::mapOptional(io, "streamK", s.streamK);
                 iot::mapOptional(io, "streamKAtomic", s.streamKAtomic);
+                iot::mapOptional(io, "streamKFullTiles", s.streamKFullTiles);
                 iot::mapRequired(io, "persistentKernel", s.persistentKernel);
                 iot::mapRequired(io, "persistentKernelAlongBatch", s.persistentKernelAlongBatch);
                 iot::mapRequired(io, "sourceKernel", s.sourceKernel);
