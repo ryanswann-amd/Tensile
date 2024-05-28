@@ -9,7 +9,7 @@ dist
 /*.yaml
 /*.txt
 /*log*
-
+**results.csv
 0_Build
 1_BenchmarkProblems
 2_BenchmarkData
