@@ -29,7 +29,7 @@ BenchmarkProblems:
       InitialSolutionParameters:
       BenchmarkCommonParameters:
       ForkParameters:
-        - 1LDSBuffer: [0, 1]
+        - 1LDSBuffer: [-1, 0, 1]
         # - AssertFree0ElementMultiple: [8]
         # - AssertFree1ElementMultiple: [8]
         # - AssertMinApproxSize: [3]
@@ -63,7 +63,7 @@ BenchmarkProblems:
         - NumLoadsCoalescedB: [1, 2]
         # - NumLoadsCoalescedB: [1]
         - OptPreLoopVmcnt: [0]
-        - PrefetchGlobalRead: [2]
+        - PrefetchGlobalRead: [0, 1, 2, 3, 4]
         - ScheduleIterAlg: [3]
         # - SourceSwap: [False, True]
         - SourceSwap: [True]
@@ -74,7 +74,7 @@ BenchmarkProblems:
         # - StoreRemapVectorWidth: [0, 1, 2, 4, 8]
         - StreamK: [3]
         - StreamKXCCMapping: [0, 1]
-        - StreamKFullTiles: [0, 1]
+        - StreamKFullTiles: [0, 1, 2]
         # - TransposeLDS: [0, 1]
         - TransposeLDS: [0]
         # - UnrollMajorLDSB: [False, True]

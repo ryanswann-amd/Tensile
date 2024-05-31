@@ -483,7 +483,7 @@ validParameters = {
     # Do another prefetch while writing data from vgpr to lds.
     #   prefetch / double-buffer reads from global memory -> vgprs --> lds.
     #                                                              |-> prefetch reads
-    "PrefetchGlobalRead":         [ 0, 1, 2 ],
+    "PrefetchGlobalRead":         [ 0, 1, 2, 3, 4],
 
     # number of iteration prefetch local reads from lds to VGPRs buffer = PLR % LoopIter
     # number of VGPRs buffer = min(PLR+1,LoopIters)
@@ -1144,7 +1144,7 @@ validParameters = {
     # 1: uses atomics to accumulate partial tiles
     "StreamKAtomic": [0, 1],
     "StreamKXCCMapping": [0, 1],
-    "StreamKFullTiles": [0, 1],
+    "StreamKFullTiles": list(range(0, 2048)),
     # Debug settings for stream-k kernels to disable parts of the kernel
     #   Bit 0: Don't generate fixup code
     #   Bit 1: Don't generate write to partials code

@@ -46,45 +46,45 @@ def checkParametersAreValid(param, validParams):
             msgBase = "Invalid parameter value: {} = {}\nValid values for {} are {}{}."
             msgExt = " (only first 32 combos printed)\nRefer to Common.py for more info" \
                     if len(validParams[name])>32 else ""
-            print(f"Outputting valid {name} sizes")
+            # print(f"Outputting valid {name} sizes")
             
-            outSizes=[]
-            f = open("sizes.txt","w")
-            for size in validParams[name]:
-                flag = True
-                for n in size:
-                    if not (n != 0 and (n & (n - 1)) == 0):
-                        flag = False
-                if(size[:4] not in ([32,32,16,1], [32,32,8,1], [16,16,16,1], [16,16,16,1])):
-                    flag = False
-                if flag:
-                    #f.write("          - " + str(size) + "\n")
-                    outSizes.append("          - " + str(size) + "\n")
+            # outSizes=[]
+            # f = open("sizes.txt","w")
+            # for size in validParams[name]:
+            #     flag = True
+            #     for n in size:
+            #         if not (n != 0 and (n & (n - 1)) == 0):
+            #             flag = False
+            #     if(size[:4] not in ([32,32,16,1], [32,32,8,1], [16,16,16,1], [16,16,16,1])):
+            #         flag = False
+            #     if flag:
+            #         #f.write("          - " + str(size) + "\n")
+            #         outSizes.append("          - " + str(size) + "\n")
             
-            instructions_per_yaml = 100
-            yaml_base = "hgemm_oneproblem"
-            template = "./yaml_files/template.yaml"
-            #Iterate over files
-            for yaml_num in range(len(outSizes)//instructions_per_yaml):
-                #Get line list
-                f = open(template,"r").readlines()
-                #Open output
-                out = open(f"./yaml_files/{yaml_base}_{yaml_num}.yaml","w")
-                index = 0
-                insertIndex = 63
-                print(f"Writing to./yaml_files/{yaml_base}_{yaml_num}.yaml")
+            # instructions_per_yaml = 100
+            # yaml_base = "hgemm_oneproblem"
+            # template = "./yaml_files/template.yaml"
+            # #Iterate over files
+            # for yaml_num in range(len(outSizes)//instructions_per_yaml):
+            #     #Get line list
+            #     f = open(template,"r").readlines()
+            #     #Open output
+            #     out = open(f"./yaml_files/{yaml_base}_{yaml_num}.yaml","w")
+            #     index = 0
+            #     insertIndex = 63
+            #     print(f"Writing to./yaml_files/{yaml_base}_{yaml_num}.yaml")
 
-                #Find tag in list
-                for line in f:
-                    if "<MATRIX_INSTRUCTIONS_HERE>" in line:
-                        insertIndex = index
-                        f.pop(insertIndex)
-                    index = index + 1
-                #Iterate over individual instructions to put them in a list of lines from the file
-                for index in range(instructions_per_yaml*yaml_num,instructions_per_yaml*(yaml_num+1)):
-                    f.insert(insertIndex,outSizes[index])
-                out.writelines(f)
-                out.close()
+            #     #Find tag in list
+            #     for line in f:
+            #         if "<MATRIX_INSTRUCTIONS_HERE>" in line:
+            #             insertIndex = index
+            #             f.pop(insertIndex)
+            #         index = index + 1
+            #     #Iterate over individual instructions to put them in a list of lines from the file
+            #     for index in range(instructions_per_yaml*yaml_num,instructions_per_yaml*(yaml_num+1)):
+            #         f.insert(insertIndex,outSizes[index])
+            #     out.writelines(f)
+            #     out.close()
             printExit(msgBase.format(name, value, name, validParams[name][:32], msgExt))
 
 
